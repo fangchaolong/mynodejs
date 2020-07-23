@@ -8,3 +8,5 @@ npm run start || npm start
 
 效果图
 ![active](/public/images/assets/1.png)
+
+目前只做了登录和注册的功能
