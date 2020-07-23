@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="register">
+  <meta name="author" content="pangtong">
+  <title>登录与注册</title>
+  <link href="/stylesheets/user/default.css" rel="stylesheet">
+  <script src="https://new.hoteastday.com/static/js/jquery.min.js"></script>
+</head>
+
+<body>
+  <p class="tishi"></p>
+  <div class="content">
+    <div class="form sign-in">
+        <h2>欢迎回来</h2>
+        <label>
+            <span>用户名</span>
+            <input type="text" class="name">
+        </label>
+        <label>
+            <span>密码</span>
+            <input type="password" class="pwd">
+        </label>
+        <p class="forgot-pass"><a href="javascript:">忘记密码？</a></p>
+        <button type="button" class="submit">登 录</button>
+        <button type="button" class="fb-btn">使用 <span>facebook</span> 帐号登录</button>
+    </div>
+    <div class="sub-cont">
+        <div class="img">
+            <div class="img__text m--up">
+                <h2>还未注册？</h2>
+                <p>立即注册，发现大量机会！</p>
+            </div>
+            <div class="img__text m--in">
+                <h2>已有帐号？</h2>
+                <p>有帐号就登录吧，好久不见了！</p>
+            </div>
+            <div class="img__btn">
+                <span class="m--up">注 册</span>
+                <span class="m--in">登 录</span>
+            </div>
+        </div>
+        <div class="form sign-up">
+            <h2>立即注册</h2>
+            <label for="name">
+                <span>用户名</span>
+                <input type="text" class="name">
+            </label>
+            <label>
+                <span>密码</span>
+                <input type="password" class="pwd">
+            </label>
+            <button type="button" class="submit">注 册</button>
+            <button type="button" class="fb-btn">使用 <span>facebook</span> 帐号注册</button>
+        </div>
+    </div>
+</div>
+<!-- <div class="container">
+  <form class="form-signin" onsubmit="return false">
+    <h2 class="form-signin-heading">请注册</h2>
+    <label for="username" class="sr-only">用户名</label>
+    <input type="text" name="username" id="username" class="form-control"    
+    placeholder="请输入用户名" required autofocus>
+    <label for="pwd" class="sr-only">密码</label>
+    <input type="password" name="pwd" id="pwd" class="form-control"   
+    placeholder="请输入密码" required>
+    <input class="btn-block" type="button" value="注册" onclick="handlesubmit()"/>
+  </form>
+</div> -->
+</body>
+<script type="text/javascript">
+  document.querySelector('.img__btn').addEventListener('click', function() {
+    document.querySelector('.content').classList.toggle('s--signup')
+  })
+
+  function tishi (title) {
+    $('.tishi')[0].innerText = title
+    $('.tishi').removeClass('hide')
+    $('.tishi').addClass('show')
+    var time = setTimeout(() => {
+      $('.tishi').removeClass('show')
+      $('.tishi').addClass('hide')
+      clearTimeout(time)
+    }, 2000)
+  }
+  window.onload = function() {
+    $('.sign-in .submit').on('click', function() {
+      var name = $('.sign-in .name')[0].value
+      var pwd = $('.sign-in .pwd')[0].value
+      if (!name) {
+        tishi('请输入用户名')
+        return false
+      }
+      if (!pwd) {
+        tishi('请输入密码')
+        return false
+      }
+      $.ajax({
+        url: '/api/user/login',
+        type: 'POST',
+        data: {
+          name,
+          pwd
+        },
+        success: (data) => {
+          // var data = JSON.parse(data)
+          console.log(data.status)
+          if (data.status === 0) {
+            tishi(data.message)
+            var a = setTimeout(() => {
+              window.location.href = '/'
+            }, 1000)
+          } else {
+            tishi(data.message)
+          }
+        },
+        error: (err) => {
+          tishi(JSON.stringify(err))
+        }
+      })
+
+    })
+
+    $('.sign-up .submit').on('click', function() {
+      var name = $('.sign-up .name')[0].value
+      var pwd = $('.sign-up .pwd')[0].value
+      if (!name) {
+        tishi('请输入用户名')
+        return false
+      }
+      if (!pwd) {
+        tishi('请输入密码')
+        return false
+      }
+      $.ajax({
+        url: '/api/user/insert',
+        type: 'POST',
+        data: {
+          name,
+          pwd
+        },
+        success: (data) => {
+          if (data.status === 0) {
+            tishi(data.message)
+          } else {
+            tishi(data.message)
+          }
+        },
+        error: (err) => {
+          tishi(JSON.stringify(err))
+        }
+      })
+    })
+  }
+</script>
+</html>
